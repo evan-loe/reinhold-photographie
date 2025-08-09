@@ -1,0 +1,13 @@
+env:
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    secret: NEXT_PUBLIC_FIREBASE_API_KEY
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: "reinart-photographie.firebaseapp.com"
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: "reinart-photographie"
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: "reinart-photographie.firebasestorage.app"
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: "827929146398"
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: "1:827929146398:web:46250db8a55e263bd46a0f"
