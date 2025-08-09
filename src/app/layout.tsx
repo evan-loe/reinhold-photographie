@@ -1,10 +1,11 @@
-import Footer from "@/app/_components/footer";
 import { CMS_NAME, HOME_OG_IMAGE_URL } from "@/lib/constants";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import cn from "classnames";
 
 import "./globals.css";
+import { Intro } from "./_components/intro";
+import LiquidChrome from "./_components/animated-components/liquid-chrome";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -60,11 +61,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#000" />
         <link rel="alternate" type="application/rss+xml" href="/feed.xml" />
       </head>
-      <body
-        className={cn(inter.className, "bg-white text-gray-900")}
-      >
-        <div className="min-h-screen">{children}</div>
-        <Footer />
+      <body className={cn(inter.className, "bg-black text-white")}>
+        <Intro />
+        <div className="">{children}</div>
       </body>
     </html>
   );

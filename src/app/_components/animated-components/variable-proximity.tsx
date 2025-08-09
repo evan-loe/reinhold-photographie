@@ -159,8 +159,11 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
             ref={ref}
             onClick={onClick}
             style={{
-                display: "inline",
+                display: "inline-block",
                 fontFamily: '"Roboto Flex", sans-serif',
+                fontVariationSettings: fromFontVariationSettings,
+                minHeight: "1em",
+                lineHeight: "1.2",
                 ...style,
             }}
             className={className}
@@ -180,7 +183,10 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>((p
                                 style={{
                                     display: "inline-block",
                                     fontVariationSettings:
-                                        interpolatedSettingsRef.current[currentLetterIndex],
+                                        interpolatedSettingsRef.current[currentLetterIndex] || fromFontVariationSettings,
+                                }}
+                                initial={{
+                                    fontVariationSettings: fromFontVariationSettings
                                 }}
                                 aria-hidden="true"
                             >

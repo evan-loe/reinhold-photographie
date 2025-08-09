@@ -18,6 +18,7 @@ function GalleryWithAnimation({ serverImages }: { serverImages: FirebaseImage[] 
   };
 
   const [masonryItems, setMasonryItems] = useState<any[]>([]);
+  const [isLayoutReady, setIsLayoutReady] = useState(false);
 
   useEffect(() => {
     if (serverImages.length > 0) {
@@ -29,6 +30,8 @@ function GalleryWithAnimation({ serverImages }: { serverImages: FirebaseImage[] 
         height: generateHeight(index),
       }));
       setMasonryItems(items);
+      // Give some time for layout calculation
+      setTimeout(() => setIsLayoutReady(true), 100);
     } else if (serverImages.length === 0) {
       // Fallback items
       const fallbackItems = [
@@ -65,7 +68,7 @@ function GalleryWithAnimation({ serverImages }: { serverImages: FirebaseImage[] 
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full min-h-[800px]" style={{ minHeight: masonryItems.length > 0 ? '800px' : '400px' }}>
       <div className="animate-in fade-in duration-1000 ease-out">
         <Masonry
           items={masonryItems}

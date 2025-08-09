@@ -28,6 +28,7 @@ import {
   DialogContent,
   DialogTrigger,
   DialogOverlay,
+  DialogTitle,
 } from "@/app/_components/animated-components/dialog";
 import { Skeleton } from "./skeleton";
 
@@ -37,20 +38,31 @@ const useMedia = (
   defaultValue: number
 ): number => {
   const get = () => {
-    if (typeof window === "undefined" || typeof window.matchMedia === "undefined") {
+    if (
+      typeof window === "undefined" ||
+      typeof window.matchMedia === "undefined"
+    ) {
       return defaultValue;
     }
-    return values[queries.findIndex((q) => window.matchMedia(q).matches)] ?? defaultValue;
+    return (
+      values[queries.findIndex((q) => window.matchMedia(q).matches)] ??
+      defaultValue
+    );
   };
 
   const [value, setValue] = useState<number>(get);
 
   useEffect(() => {
-    if (typeof window === "undefined" || typeof window.matchMedia === "undefined") {
+    if (
+      typeof window === "undefined" ||
+      typeof window.matchMedia === "undefined"
+    ) {
       return;
     }
     const handler = () => setValue(get);
-    queries.forEach((q) => window.matchMedia(q).addEventListener("change", handler));
+    queries.forEach((q) =>
+      window.matchMedia(q).addEventListener("change", handler)
+    );
     return () =>
       queries.forEach((q) =>
         window.matchMedia(q).removeEventListener("change", handler)
@@ -175,7 +187,7 @@ const Masonry: React.FC<MasonryProps> = ({
     }
   };
 
-  const grid = useMemo((): { items: GridItem[], height: number } => {
+  const grid = useMemo((): { items: GridItem[]; height: number } => {
     if (!width) return { items: [], height: 0 };
     const colHeights = new Array(columns).fill(0);
     const gap = 16;
@@ -194,14 +206,13 @@ const Masonry: React.FC<MasonryProps> = ({
 
     // Calculate the total height needed
     const maxHeight = Math.max(...colHeights);
-    
+
     return { items: gridItems, height: maxHeight };
   }, [columns, items, width]);
 
   const hasMounted = useRef(false);
 
   useLayoutEffect(() => {
-
     grid.items.forEach((item, index) => {
       const selector = `[data-key="${item.id}"]`;
       const animProps = { x: item.x, y: item.y, width: item.w, height: item.h };
@@ -245,7 +256,7 @@ const Masonry: React.FC<MasonryProps> = ({
       gsap.to(`[data-key="${id}"]`, {
         scale: hoverScale,
         duration: 0.3,
-        ease: "power2.out"
+        ease: "power2.out",
       });
     }
     if (colorShiftOnHover) {
@@ -259,7 +270,7 @@ const Masonry: React.FC<MasonryProps> = ({
       gsap.to(`[data-key="${id}"]`, {
         scale: 1,
         duration: 0.3,
-        ease: "power2.out"
+        ease: "power2.out",
       });
     }
     if (colorShiftOnHover) {
@@ -275,46 +286,62 @@ const Masonry: React.FC<MasonryProps> = ({
   };
 
   return (
-    <div ref={containerRef} className="relative w-full h-full" style={{ height: grid.height || 'auto' }}>
+    <div
+      ref={containerRef}
+      className="relative w-full"
+      style={{ 
+        height: grid.height || "800px", // Default height to prevent layout shift
+        minHeight: "800px" // Ensure minimum height
+      }}
+    >
       {grid.items.map((item) => (
         <Dialog key={item.id}>
           <DialogTrigger asChild>
             <div
               key={item.id}
               data-key={item.id}
-              className="absolute box-content"
+              className="absolute"
               style={{ willChange: "transform, width, height, opacity" }}
               onMouseEnter={(e) => handleMouseEnter(item.id, e.currentTarget)}
               onMouseLeave={(e) => handleMouseLeave(item.id, e.currentTarget)}
             >
               {loadedImages.has(item.id) && (
-                <div 
+                <div
                   className="absolute inset-0 bg-cover bg-top rounded-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)] uppercase text-[10px] leading-[10px]"
                   style={{ backgroundImage: `url(${item.img})` }}
                 ></div>
               )}
               {!loadedImages.has(item.id) && (
-                <Skeleton className="absolute inset-0 rounded-[10px]"/>
+                <Skeleton className="absolute inset-0 rounded-[10px]" />
               )}
-              <img src={item.img} loading="eager" className="hidden" alt="" onLoad={() => handleImageLoad(item.id)} />
+              <img
+                src={item.img}
+                loading="eager"
+                className="hidden"
+                alt=""
+                onLoad={() => handleImageLoad(item.id)}
+              />
               {colorShiftOnHover && (
                 <div className="color-overlay absolute inset-0 rounded-[10px] bg-gradient-to-tr from-gray-800 to-gray-200/50 opacity-0 pointer-events-none" />
               )}
             </div>
           </DialogTrigger>
-          <DialogContent className="max-w-[98vw] max-h-[98vh] sm:max-w-[95vw] sm:max-h-[95vh] w-auto h-auto p-0 bg-transparent border-0 shadow-none">
+          <DialogContent className="p-0 bg-transparent border-0 shadow-none flex items-center justify-center">
+            <DialogTitle className="sr-only">
+              {`Gallery image ${item.id}`}
+            </DialogTitle>
             <img
               src={item.img}
               alt={`Gallery image ${item.id}`}
               loading="eager"
-              className="max-w-full max-h-full object-contain rounded-lg"
+              className="object-contain rounded-lg"
               onLoad={(e) => {
                 const img = e.currentTarget;
                 const isPortrait = img.naturalHeight > img.naturalWidth;
                 if (isPortrait) {
-                  img.style.objectPosition = 'center top';
+                  img.style.objectPosition = "center top";
                 } else {
-                  img.style.objectPosition = 'center center';
+                  img.style.objectPosition = "center center";
                 }
               }}
             />
